@@ -1,0 +1,12 @@
+data_source,sub_source,timestamp,status
+eloqua,bounceback,01-07-2024,PROCESSING
+eloqua,contact,01-07-2024,PROCESSING
+eloqua,subscribe,01-07-2024,PROCESSING
+ipc,channel,01-07-2024,PROCESSING
+ipc,events,01-07-2024,PROCESSING
+adobe,analyticsbase,01-07-2024,PROCESSING
+adobe,aggregated,01-07-2024,PROCESSING
+crosschannel,crosschannel_adobe,01-07-2024,PROCESSING
+ipc,eventskpi,01-07-2024,PROCESSING
+adobe,misc_2,01-07-2024,PROCESSING
+tmm,activity,01-07-2024,PROCESSING

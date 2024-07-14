@@ -93,3 +93,14 @@ for i in ['adobe','ipc']:
 
 # Adding explicit dependencies
 sub_source['adobe_demon'] >> sub_source['ipc_channel']
+
+# Function to identify and connect final tasks to end_dag
+def connect_final_tasks_to_end(dag, end_task):
+    for task in dag.tasks:
+        if not task.downstream_list and task.task_id != end_task.task_id:
+            # Ensure no circular dependency is created
+            if task.task_id != end_task.task_id:
+                task >> end_task
+
+# Connect final tasks to end_dag
+connect_final_tasks_to_end(dag, end_dag)
