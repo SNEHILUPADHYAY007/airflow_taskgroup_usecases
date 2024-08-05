@@ -86,11 +86,24 @@ global_sources = {
 ###################################
 
 # Reading the fw file
-df = pl.read_csv('/opt/airflow/tmp/data_sources.csv')
+# df = pl.read_csv('/opt/airflow/tmp/data_sources.csv')
+data = {
+    "data_source": ["adobe", "adobe", "adobe", "adobe", "adobe", "crosschannel", "crosschannel", "ipc", "ipc", "ipc", "ipc"],
+    "data_source_file": ["analyticsbase", "misc_1", "aggregated", "misc_2", "misc_3", "crosschannel_adobe", "crosschannel_page", "events", "channel", "contact", "eventskpi"],
+    "timestamp": [
+        "2024-07-10T05:30:17", "2024-07-10T06:16:45", "2024-07-10T05:50:12",
+        "2024-07-10T05:50:12", "2024-07-10T05:50:12", "2024-07-10T05:50:12",
+        "2024-07-10T05:50:12", "2024-07-10T05:50:12", "2024-07-10T05:50:12",
+        "2024-07-10T05:50:12", "2024-07-10T05:50:12"
+    ],
+    "status": ["PROCESSING"] * 11
+}
+
+df = pl.DataFrame(data)
 
 # Getting required fields from the table
 sources = df['data_source']
-sub_sources = df['sub_source']
+sub_sources = df['data_source_file']
 
 # Creating defaultdict to store the result in default(class<list>) format: {source: [sub_sources]}
 
@@ -101,6 +114,10 @@ for key, value in zip(sources, sub_sources):
 
 # Filtering out the required sources only.
 req_sources = global_sources
+
+for key in list(req_sources.keys()):
+    if key not in result_dict:
+        del req_sources[key]
 
 for key, values in result_dict.items():
     if key in req_sources:
@@ -168,8 +185,8 @@ def set_sequential_dependencies(key):
         if key in ['ipc', 'adobe'] and source_groups[i].group_id.endswith('source_1') and source_groups[i + 1].group_id.endswith('source_2'):
             sub_source['ipc_events'] >> sub_source['ipc_eventskpi']
             sub_source['adobe_analyticsbase'] >> sub_source['adobe_aggregated']
+            sub_source['adobe_analyticsbase'] >> sub_source['crosschannel_crosschannel_page']
             sub_source['adobe_analyticsbase'] >> sub_source['crosschannel_crosschannel_adobe']
-            sub_source['tmm_activity'] >> sub_source['crosschannel_crosschannel_adobe']
         else:
             source_groups[i] >> source_groups[i + 1]
     return source_groups
